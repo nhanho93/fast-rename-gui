@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast Rename Pro V3.5</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="dark-theme">
+    <div class="glass-container">
+        <header>
+            <div class="brand">
+                <h1>Fast Rename <span>Pro V3.5</span></h1>
+                <p>Platinum Standard ⚡ Professional Naming Utility</p>
+            </div>
+            <div class="theme-button-group">
+                <button class="theme-btn" data-theme="light" title="Light Mode">☀️</button>
+                <button class="theme-btn" data-theme="dark" title="Dark Mode">🌙</button>
+                <button class="theme-btn" data-theme="auto" title="System Sync">🖥️</button>
+            </div>
+        </header>
+
+        <main>
+            <aside class="sidebar">
+                <div class="glass-panel main-controls">
+                    <div class="input-group">
+                        <div class="label-with-info">
+                            <label>Source Folder</label>
+                            <span class="info-icon"
+                                data-info="Chọn thư mục nguồn chứa các tệp tin bạn muốn đổi tên.">i</span>
+                        </div>
+                        <div class="folder-selector">
+                            <input type="text" id="folder-path" readonly placeholder="Pick a workspace...">
+                            <button id="select-folder-btn">Browse</button>
+                        </div>
+                    </div>
+
+                    <div class="normalization-belt">
+                        <div class="label-with-info">
+                            <label>Quick Rename</label>
+                            <span class="info-icon"
+                                data-info="Tự động chuẩn hóa: Viết thường, Loại bỏ dấu Tiếng Việt, Thay dấu cách bằng gạch nối.">i</span>
+                        </div>
+                        <div class="checkbox-grid">
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="opt-lowercase" checked>
+                                <span>Lowercase</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="opt-remove-accents" checked>
+                                <span>No Accents</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="opt-space-to-hyphen" checked>
+                                <span>Hyphens</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel transform-panel">
+                    <div class="label-with-info">
+                        <label>Advanced Rename</label>
+                        <span class="info-icon"
+                            data-info="Thêm tiền tố/hậu tố hoặc thay đổi phần mở rộng cho tất cả tệp tin.">i</span>
+                    </div>
+                    <div class="input-stack">
+                        <input type="text" id="prefix" placeholder="đầu (e.g. IMG_)">
+                        <input type="text" id="suffix" placeholder="cuối (e.g. _v1)">
+                        <input type="text" id="extension" placeholder="phần mở rộng (e.g. webp)">
+                    </div>
+                </div>
+                <div class="glass-panel numbering-panel">
+                    <div class="panel-header">
+                        <div class="label-with-info">
+                            <h3>Smart Numbering</h3>
+                            <span class="info-icon"
+                                data-info="Tự động đánh số thứ tự. Bạn có thể kéo thả tệp tin ở bảng bên phải để thay đổi thứ tự.">i</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="num-enable">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div id="numbering-controls" class="numbering-content disabled">
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>Configuration</label>
+                                <!-- Custom Dropdown Placeholder -->
+                                <div class="custom-select" id="anchor-select">
+                                    <div class="select-selected">Start (Prefix)</div>
+                                    <div class="select-items select-hide">
+                                        <div data-value="prefix">Start (Prefix)</div>
+                                        <div data-value="suffix">End (Suffix)</div>
+                                    </div>
+                                    <input type="hidden" id="num-position" value="prefix">
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label>Separator</label>
+                                <input type="text" id="num-separator" value="-" style="text-align:center">
+                            </div>
+                        </div>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>Start From</label>
+                                <input type="number" id="num-start" value="1" min="0">
+                            </div>
+                            <div class="input-group">
+                                <label>Padding</label>
+                                <input type="number" id="num-padding" value="2" min="1" max="6">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <div class="right-column">
+                <section class="preview-container glass-panel">
+                    <div class="preview-header">
+                        <div class="label-with-info">
+                            <h2>Renaming List</h2>
+                            <span class="info-icon"
+                                data-info="Danh sách tệp tin hiện tại và tên dự kiến sau khi thay đổi.">i</span>
+                        </div>
+                        <span id="file-count" class="badge">0 Files Found</span>
+                    </div>
+                    <div class="table-frame">
+                        <table id="preview-table">
+                            <thead>
+                                <tr>
+                                    <th width="50"></th>
+                                    <th>Source Identity</th>
+                                    <th>New Identity</th>
+                                </tr>
+                            </thead>
+                            <tbody id="preview-body" class="sortable-list"></tbody>
+                        </table>
+                    </div>
+                </section>
+                <footer>
+                    <button id="rename-btn" class="apply-btn" disabled>Rename</button>
+                </footer>
+            </div>
+        </main>
+
+        <!-- Premium Modal -->
+        <div id="modal-overlay" class="modal-overlay hidden">
+            <div class="modal">
+                <span class="modal-status-icon">🚨</span>
+                <h2>Namespace Conflict Detected</h2>
+                <p>Multiple files will result in the same name. Would you like to enable auto-sequencing to resolve
+                    this?
+                </p>
+                <div class="conflict-scroll" id="conflict-list"></div>
+                <div class="modal-actions">
+                    <button id="modal-cancel" class="cancel-btn">Abort Operation</button>
+                    <button id="modal-confirm" class="confirm-btn">Resolve & Proceed</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="toast" class="toast hidden"></div>
+        <div id="tooltip" class="tooltip hidden"></div>
+
+        <script src="Sortable.min.js"></script>
+        <script src="renderer.js"></script>
+</body>
+
+</html>
