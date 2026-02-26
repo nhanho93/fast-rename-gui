@@ -21,3 +21,5 @@ Fast-Rename-Pro-*/
 *.bin
 *.dll
 *Fast-Rename-Pro*
+
+.agent/
