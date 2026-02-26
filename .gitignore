@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Builds & Binaries
+dist/
+Fast-Rename-Pro-V3/
+Fast-Rename-Pro-V3.5/
+Fast-Rename-Pro-V3.6/
+
+# Environment
+.env
+.DS_Store
+*.log
+
+node_modules/
+dist/
+*.exe
+Fast-Rename-Pro-*/
+*.pak
+*.bin
+*.dll
+*Fast-Rename-Pro*
+
+.agent/
+
+*.zip
+
+Fast-Rename-Sieu-Cap-VIP-PRO-*/
+
+*Fast-Rename-Sieu-Cap-VIP-PRO*
