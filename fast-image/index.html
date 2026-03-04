@@ -1,0 +1,563 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast Image Pro Siêu Cấp VIP Pro</title>
+    <link rel="icon" type="image/x-icon" href="favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="manifest" href="favicon/site.webmanifest">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="dark-theme">
+    <script>
+        window.onerror = function (msg, url, lineNo, columnNo, error) {
+            const lang = localStorage.getItem('vip-lang') || 'vi';
+            const prefix = lang === 'vi' ? 'Ứng dụng gặp lỗi:\n' : 'Application Crash Detected:\n';
+            const atLine = lang === 'vi' ? '\nTại dòng: ' : '\nAt line: ';
+            alert(prefix + msg + atLine + lineNo);
+            return false;
+        };
+        window.addEventListener('unhandledrejection', function (event) {
+            const lang = localStorage.getItem('vip-lang') || 'vi';
+            const prefix = lang === 'vi' ? 'Lỗi IPC không đồng bộ:\n' : 'Async IPC Error:\n';
+            alert(prefix + (event.reason && event.reason.message ? event.reason.message : event.reason));
+        });
+    </script>
+    <div class="glass-container">
+        <header>
+            <div class="brand">
+                <h1><img src="logo-app.png" alt="Logo" class="app-logo"> Fast Image <span>Siêu Cấp VIP Pro</span></h1>
+                <p>Platinum Standard ⚡ Professional Naming Utility</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <button id="changelog-btn" class="changelog-btn-top" title="Changelog">Changelog</button>
+                <div class="theme-button-group">
+                    <button class="theme-btn" data-theme="light" title="Light Mode">☀️</button>
+                    <button class="theme-btn" data-theme="dark" title="Dark Mode">🌙</button>
+                    <button class="theme-btn" data-theme="auto" title="System Sync">🖥️</button>
+                    <button id="lang-btn" class="lang-btn" title="Switch Language">VI</button>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <aside class="sidebar">
+                <div class="glass-panel main-controls" style="padding-bottom: 5px;">
+                    <div class="input-group">
+                        <div class="label-with-info">
+                            <label data-i18n="source">Nguồn</label>
+                            <span class="info-icon"
+                                data-info-vi="Nhập đường dẫn thư mục hoặc dùng nút Browse. Nhấn Enter để tải."
+                                data-info-en="Enter folder path or use Browse button. Press Enter to load."
+                                data-info="Nhập đường dẫn thư mục hoặc dùng nút Browse. Nhấn Enter để tải.">i</span>
+                        </div>
+                        <div class="folder-selector">
+                            <input type="text" id="folder-path" data-i18n-placeholder="phFolderPath"
+                                placeholder="Dán đường dẫn hoặc Browse..." spellcheck="false">
+                        </div>
+                        <div style="display: flex; gap: 8px; margin-top: 8px;">
+                            <button id="select-folder-btn" style="flex: 1;" data-i18n="btnFolder">📂 Thư Mục</button>
+                            <button id="select-files-btn" class="secondary-btn" style="flex: 1;"
+                                data-i18n="btnFiles">🖼️ Files</button>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-tabs">
+                        <button class="tab-btn active" data-target="tab-rename" data-i18n="tabRename">Rename</button>
+                        <button class="tab-btn" data-target="tab-image" data-i18n="tabImage">Ảnh</button>
+                        <button class="tab-btn" data-target="tab-favicon" data-i18n="tabFavicon">Favicon</button>
+                    </div>
+                </div>
+
+                <div id="tab-rename" class="tab-content active">
+                    <!-- Inner sub-tabs for Rename -->
+                    <div class="sidebar-tabs" style="margin-top:-10px;">
+                        <button class="tab-btn active" data-img-target="rn-tab-quick"
+                            data-i18n="tabQuick">Nhanh</button>
+                        <button class="tab-btn" data-img-target="rn-tab-advanced" data-i18n="tabAdvanced">Nâng
+                            Cao</button>
+                        <button class="tab-btn" data-img-target="rn-tab-numbering" data-i18n="tabNumber">#️⃣ Đánh
+                            Số</button>
+                    </div>
+
+                    <!-- Quick Rename Panel -->
+                    <div id="rn-tab-quick" class="img-tab-content active glass-panel main-controls">
+                        <div class="normalization-belt">
+                            <div class="label-with-info">
+                                <label data-i18n="quickRename">Rename Nhanh</label>
+                                <span class="info-icon"
+                                    data-info-vi="Chuẩn hóa nhanh: Chữ thường, bỏ dấu, thay khoảng trắng bằng gạch ngang."
+                                    data-info-en="Auto normalize: Lowercase, Remove accents, Replace spaces with hyphens."
+                                    data-info="Chuẩn hóa nhanh: Chữ thường, bỏ dấu, thay khoảng trắng bằng gạch ngang.">i</span>
+                            </div>
+                            <div class="checkbox-grid">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="opt-lowercase" checked>
+                                    <span data-i18n="optLowercase">Chữ thường</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="opt-remove-accents" checked>
+                                    <span data-i18n="optNoAccents">Bỏ dấu</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="opt-space-to-hyphen" checked>
+                                    <span data-i18n="optHyphens">Gạch ngang</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Rename Panel -->
+                    <div id="rn-tab-advanced" class="img-tab-content glass-panel transform-panel" style="display:none;">
+                        <div class="label-with-info">
+                            <label data-i18n="advancedRename">Rename Nâng Cao</label>
+                            <span class="info-icon"
+                                data-info-vi="Thêm tiền tố/hậu tố hoặc đổi đuôi file cho tất cả các tập tin."
+                                data-info-en="Add prefix/suffix or change extension for all files."
+                                data-info="Thêm tiền tố/hậu tố hoặc đổi đuôi file cho tất cả các tập tin.">i</span>
+                        </div>
+                        <div class="input-stack">
+                            <input type="text" id="prefix" data-i18n-placeholder="phPrefix"
+                                placeholder="Tiền tố (vd: IMG_)">
+                            <input type="text" id="suffix" data-i18n-placeholder="phSuffix"
+                                placeholder="Hậu tố (vd: _v1)">
+                            <input type="text" id="extension" data-i18n-placeholder="phExtension"
+                                placeholder="Đuôi file (vd: webp)">
+                        </div>
+                    </div>
+
+                    <!-- Smart Numbering Panel -->
+                    <div id="rn-tab-numbering" class="img-tab-content glass-panel numbering-panel"
+                        style="display:none;">
+                        <div class="panel-header">
+                            <div class="label-with-info">
+                                <h3 data-i18n="smartNumbering">Đánh Số Tự Động</h3>
+                                <span class="info-icon"
+                                    data-info-vi="Tự động đánh số file. Kéo thả trong bảng để sắp xếp lại thứ tự."
+                                    data-info-en="Auto number files. Drag files in the table to reorder."
+                                    data-info="Tự động đánh số file. Kéo thả trong bảng để sắp xếp lại thứ tự.">i</span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="num-enable">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div id="numbering-controls" class="numbering-content disabled">
+                            <div class="input-row">
+                                <div class="input-group">
+                                    <label data-i18n="configuration">Cấu Hình</label>
+                                    <div class="custom-select" id="anchor-select">
+                                        <div class="select-selected" data-i18n="numPosPrefix">Đầu (Tiền tố)</div>
+                                        <div class="select-items select-hide">
+                                            <div data-value="prefix" data-i18n="numPosPrefix">Đầu (Tiền tố)</div>
+                                            <div data-value="suffix" data-i18n="numPosSuffix">Cuối (Hậu tố)</div>
+                                        </div>
+                                        <input type="hidden" id="num-position" value="prefix">
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label data-i18n="separator">Phân cách</label>
+                                    <input type="text" id="num-separator" value="-" style="text-align:center">
+                                </div>
+                            </div>
+                            <div class="input-row">
+                                <div class="input-group">
+                                    <label data-i18n="startFrom">Bắt đầu từ</label>
+                                    <input type="number" id="num-start" value="1" min="0">
+                                </div>
+                                <div class="input-group">
+                                    <label data-i18n="padding">Padding</label>
+                                    <input type="number" id="num-padding" value="2" min="1" max="6">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-image" class="tab-content">
+                    <!-- Inner sub-tabs for Image Processing -->
+                    <div class="sidebar-tabs" style="margin-top:-10px;">
+                        <button class="tab-btn active" data-img-target="img-tab-resize" data-i18n="tabResize">⚖️
+                            Resize</button>
+                        <button class="tab-btn" data-img-target="img-tab-crop" data-i18n="tabCrop">✂️ Crop</button>
+                        <button class="tab-btn" data-img-target="img-tab-convert" data-i18n="tabConvert">🔄
+                            Convert</button>
+                    </div>
+
+                    <!-- Resize Panel -->
+                    <div id="img-tab-resize" class="img-tab-content active glass-panel numbering-panel">
+                        <div class="panel-header">
+                            <div class="label-with-info">
+                                <h3 data-i18n="resizeOptions">Tùy chọn Resize</h3>
+                                <span class="info-icon" data-info-vi="Thu phóng ảnh. Nhập auto để giữ tỷ lệ khung hình."
+                                    data-info-en="Resize images. Enter auto to keep aspect ratio."
+                                    data-info="Thu phóng ảnh. Nhập auto để giữ tỷ lệ khung hình.">i</span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="resize-enable" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div id="resize-controls" class="numbering-content">
+                            <div class="input-row" style="margin-bottom: 12px;">
+                                <div class="input-group">
+                                    <label class="control-label" data-i18n="constraintMode">Chế độ</label>
+                                    <div class="custom-select" id="resize-mode-select">
+                                        <div class="select-selected" data-i18n="dimDimensions">Kích thước</div>
+                                        <div class="select-items select-hide">
+                                            <div data-value="dimensions" data-i18n="dimDimensions">Kích thước</div>
+                                            <div data-value="percentage" data-i18n="dimPercentage">Phần trăm</div>
+                                        </div>
+                                        <input type="hidden" id="resize-mode" value="dimensions">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input-row" id="resize-dimensions-group">
+                                <div class="input-group">
+                                    <label class="control-label" data-i18n="widthPx">Rộng (px)</label>
+                                    <input type="text" id="resize-width" data-i18n-placeholder="phWidthAuto"
+                                        placeholder="vd: 800, auto">
+                                </div>
+                                <div class="input-group">
+                                    <label class="control-label" data-i18n="heightPx">Cao (px)</label>
+                                    <input type="text" id="resize-height" data-i18n-placeholder="phHeightAuto"
+                                        placeholder="vd: 600, auto">
+                                </div>
+                            </div>
+                            <div class="input-row hidden" id="resize-percent-group">
+                                <div class="input-group">
+                                    <label class="control-label" data-i18n="percentage">Phần trăm (%)</label>
+                                    <input type="number" id="resize-percent" placeholder="50" min="1" max="200">
+                                </div>
+                            </div>
+                            <div class="input-row" style="margin-top: 4px;">
+                                <div class="input-group">
+                                    <label class="control-label" data-i18n="outputQuality">Chất lượng</label>
+                                    <div class="custom-select" id="quality-mode-select">
+                                        <div class="select-selected" data-i18n="qualOriginal">Gốc</div>
+                                        <div class="select-items select-hide">
+                                            <div data-value="original" data-i18n="qualOriginal">Gốc</div>
+                                            <div data-value="manual" data-i18n="qualManual">Thủ công %</div>
+                                        </div>
+                                        <input type="hidden" id="quality-mode" value="original">
+                                    </div>
+                                </div>
+                                <div class="input-group hidden" id="quality-value-group">
+                                    <label class="control-label" data-i18n="qualityVal">Chất lượng (1-100)</label>
+                                    <input type="number" id="quality-value" placeholder="85" min="1" max="100"
+                                        value="85">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Crop Panel -->
+                    <div id="img-tab-crop" class="img-tab-content glass-panel numbering-panel" style="display:none;">
+                        <div class="panel-header">
+                            <div class="label-with-info">
+                                <h3 data-i18n="cropOptions">Tùy chọn Crop</h3>
+                                <span class="info-icon" data-info-vi="Cắt ảnh theo kích thước pixel hoặc tỷ lệ."
+                                    data-info-en="Crop images by pixel dimensions or aspect ratio."
+                                    data-info="Cắt ảnh theo kích thước pixel hoặc tỷ lệ.">i</span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="crop-enable">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div id="crop-controls" class="numbering-content disabled">
+                            <div class="input-row" style="margin-bottom: 12px;">
+                                <div class="input-group">
+                                    <label class="control-label" data-i18n="cropModeLabel">Chế độ Crop</label>
+                                    <div class="custom-select" id="crop-mode-select">
+                                        <div class="select-selected" data-i18n="dimDimensions">Kích thước</div>
+                                        <div class="select-items select-hide">
+                                            <div data-value="dimensions" data-i18n="dimDimensions">Kích thước</div>
+                                            <div data-value="ratio" data-i18n="dimRatio">Tỷ lệ khung hình</div>
+                                        </div>
+                                        <input type="hidden" id="crop-mode" value="dimensions">
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label class="control-label" data-i18n="gravityFocus">Trọng tâm</label>
+                                    <div class="custom-select" id="crop-gravity-select">
+                                        <div class="select-selected" data-i18n="gravCenter">Giữa</div>
+                                        <div class="select-items select-hide">
+                                            <div data-value="center" data-i18n="gravCenter">Giữa</div>
+                                            <div data-value="north" data-i18n="gravNorth">Trên (Bắc)</div>
+                                            <div data-value="entropy" data-i18n="gravEntropy">Nội dung thông minh</div>
+                                        </div>
+                                        <input type="hidden" id="crop-gravity" value="center">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input-row" id="crop-dimensions-group">
+                                <div class="input-group">
+                                    <label class="control-label" data-i18n="widthLabel">Rộng</label>
+                                    <input type="number" id="crop-width" placeholder="1080">
+                                </div>
+                                <div class="input-group">
+                                    <label class="control-label" data-i18n="heightLabel">Cao</label>
+                                    <input type="number" id="crop-height" placeholder="1080">
+                                </div>
+                            </div>
+                            <div class="input-row hidden" id="crop-ratio-group">
+                                <div class="input-group">
+                                    <label class="control-label" data-i18n="ratioLabel">Tỷ lệ (R:C)</label>
+                                    <input type="text" id="crop-ratio" data-i18n-placeholder="phRatio"
+                                        placeholder="vd: 16:9, 1:1">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Convert Panel -->
+                    <div id="img-tab-convert" class="img-tab-content glass-panel numbering-panel" style="display:none;">
+                        <div class="panel-header">
+                            <div class="label-with-info">
+                                <h3 data-i18n="convertFormat">Chuyển Định Dạng</h3>
+                                <span class="info-icon"
+                                    data-info-vi="Chuyển đổi định dạng. JPG sang WebP giảm 30–70% dung lượng."
+                                    data-info-en="Convert format. JPG to WebP reduces file size by 30–70%."
+                                    data-info="Chuyển đổi định dạng. JPG sang WebP giảm 30–70% dung lượng.">i</span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="convert-enable">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div id="convert-controls" class="numbering-content disabled">
+                            <div class="input-row">
+                                <div class="input-group">
+                                    <label class="control-label" data-i18n="outputFormat">Định dạng đầu ra</label>
+                                    <div class="custom-select" id="convert-format-select">
+                                        <div class="select-selected">JPEG (.jpg)</div>
+                                        <div class="select-items select-hide">
+                                            <div data-value="jpg">JPEG (.jpg) — Ảnh chung</div>
+                                            <div data-value="png">PNG (.png) — Lossless</div>
+                                            <div data-value="webp">WebP (.webp) — Web tối ưu</div>
+                                            <div data-value="avif">AVIF (.avif) — Siêu nhỏ</div>
+                                        </div>
+                                        <input type="hidden" id="convert-format" value="jpg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Favicon Generator Tab -->
+                <div id="tab-favicon" class="tab-content">
+                    <div class="glass-panel main-controls favicon-panel">
+                        <div class="label-with-info">
+                            <label data-i18n="faviconLabel">🌐 Favicon SEO Pack</label>
+                            <span class="info-icon"
+                                data-info-vi="Tạo bộ favicon chuẩn SEO từ logo. Thư mục xuất tự tạo: [tên-file-favicon]/"
+                                data-info-en="Generate SEO-ready favicon pack. Output folder auto-created: [filename-favicon]/"
+                                data-info="Tạo bộ favicon chuẩn SEO từ logo. Thư mục xuất tự tạo: [tên-file-favicon]/">i</span>
+                        </div>
+
+                        <!-- Logo Picker Zone -->
+                        <div class="favicon-logo-zone" id="favicon-logo-zone">
+                            <div class="favicon-logo-preview" id="favicon-logo-preview">
+                                <span class="favicon-logo-placeholder">🖼️</span>
+                            </div>
+                            <div class="favicon-logo-info">
+                                <span id="favicon-logo-name" class="favicon-logo-name" data-i18n="fvNoLogo">Chưa chọn
+                                    logo</span>
+                                <span id="favicon-auto-folder" class="favicon-auto-folder"></span>
+                                <button id="favicon-pick-logo" class="secondary-btn" data-i18n="fvPickLogo">Chọn
+                                    Logo...</button>
+                            </div>
+                        </div>
+
+                        <!-- App Name only -->
+                        <div class="input-group" style="margin-top:14px;">
+                            <label class="control-label" data-i18n="fvAppName">Tên ứng dụng</label>
+                            <input type="text" id="favicon-app-name" data-i18n-placeholder="fvAppNamePh"
+                                placeholder="Tên website / app">
+                        </div>
+
+                        <p class="favicon-hint" data-i18n="fvHint">📂 Thư mục xuất: <em>[tên-logo]-favicon/</em> — cạnh
+                            file logo</p>
+                    </div>
+                </div>
+
+
+            </aside>
+
+            <div class="right-column">
+                <section id="preview-section" class="preview-container glass-panel">
+                    <div class="preview-header">
+                        <div class="label-with-info">
+                            <h2 data-i18n="renamingList">Danh Sách Xử Lý</h2>
+                            <span class="info-icon"
+                                data-info-vi="Danh sách tập tin hiện tại và tên dự kiến sau khi thay đổi."
+                                data-info-en="Current file list and expected names after transformation."
+                                data-info="Danh sách tập tin hiện tại và tên dự kiến sau khi thay đổi.">i</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                            <span id="file-count" class="badge">0 Tập Tin</span>
+                            <div style="display:flex;align-items:center;gap:8px;"
+                                title="Giữ file gốc, tạo file mới với tên có hậu tố">
+                                <span class="keep-toggle-label" data-i18n="keepSource"
+                                    style="font-size: 13px; font-weight: 500; color: var(--text-dim);">Giữ File
+                                    Gốc</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="keep-original-toggle">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-frame">
+                        <table id="preview-table">
+                            <thead>
+                                <tr>
+                                    <th width="50"></th>
+                                    <th data-i18n="thOriginal">Tên gốc</th>
+                                    <th id="preview-table-th3" data-i18n="thNewName">Tên mới</th>
+                                    <th width="40"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="preview-body" class="sortable-list"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Favicon right-side panel (shown instead of preview when favicon tab active) -->
+                <section id="favicon-right-panel" class="preview-container glass-panel hidden">
+                    <div class="preview-header">
+                        <div class="label-with-info">
+                            <h2 data-i18n="fvResultsLabel">📦 Favicon Pack</h2>
+                        </div>
+                        <span id="favicon-results-dir" class="favicon-results-dir"></span>
+                    </div>
+                    <div class="table-frame">
+                        <table class="favicon-table">
+                            <thead>
+                                <tr>
+                                    <th data-i18n="fvThFile">File</th>
+                                    <th data-i18n="fvThSize">Kích thước</th>
+                                    <th data-i18n="fvThStatus">Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody id="favicon-results-list"></tbody>
+                        </table>
+                        <div id="favicon-snippet" class="favicon-snippet"></div>
+                    </div>
+                </section>
+
+                <footer>
+                    <button id="process-btn" class="apply-btn" disabled data-i18n="btnApply">⚡ Áp Dụng</button>
+                </footer>
+            </div>
+        </main>
+
+        <!-- Premium Modal -->
+        <div id="modal-overlay" class="modal-overlay hidden">
+            <div class="modal">
+                <span class="modal-status-icon">⚠️</span>
+                <h2 data-i18n="modalTitle">Phát hiện Xung đột Tên</h2>
+                <p data-i18n="modalBody">Nhiều file sẽ có cùng tên. Bạn có muốn tự động thêm số thứ tự để giải quyết
+                    không?</p>
+                <div class="conflict-scroll" id="conflict-list"></div>
+                <div class="modal-actions">
+                    <button id="modal-cancel" class="cancel-btn" data-i18n="modalCancel">Hủy bỏ</button>
+                    <button id="modal-confirm" class="confirm-btn" data-i18n="modalConfirm">Giải quyết &amp; Tiếp
+                        tục</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Version Badge -->
+        <div class="version-badge">v1.6.0</div>
+
+        <!-- Changelog Modal -->
+        <div id="changelog-overlay" class="modal-overlay hidden">
+            <div class="modal changelog-modal">
+                <button id="changelog-close" class="changelog-close-btn" title="Close">✕</button>
+                <div class="changelog-header">
+                    <span class="changelog-icon">📋</span>
+                    <div>
+                        <h2 data-i18n="changelogTitle">Changelog</h2>
+                        <p class="changelog-subtitle">Fast Image Siêu Cấp VIP PRO</p>
+                    </div>
+                </div>
+                <div class="changelog-body">
+                    <details class="changelog-version" open>
+                        <summary class="changelog-version-header">
+                            <span class="changelog-tag new">LATEST</span>
+                            <span class="changelog-version-num">v1.6.0</span>
+                            <span class="changelog-date">2026-03-04</span>
+                        </summary>
+                        <ul class="changelog-list">
+                            <li class="feat" data-i18n="cl16_1">🌐 Favicon SEO Pack: Tự tạo cấu trúc & icon tự động</li>
+                            <li class="feat" data-i18n="cl16_2">🌍 Giao diện song ngữ: Hỗ trợ đầy đủ Anh / Việt</li>
+                            <li class="feat" data-i18n="cl16_3">✨ Chuẩn font chữ sửa lỗi dấu Tiếng Việt</li>
+                            <li class="feat" data-i18n="cl16_4">✨ Changelog thông minh: Tự động gập phiên bản cũ</li>
+                            <li class="fix" data-i18n="cl16_5">🐛 Fix UI overflow màn hình</li>
+                        </ul>
+                    </details>
+                    <details class="changelog-version">
+                        <summary class="changelog-version-header">
+                            <span class="changelog-tag">v1.5.0</span>
+                            <span class="changelog-version-num">v1.5.0</span>
+                            <span class="changelog-date">2026-03-04</span>
+                        </summary>
+                        <ul class="changelog-list">
+                            <li class="feat" data-i18n="cl15_1">✨ Xử lý ảnh tích hợp: Resize, Crop, Convert (sharp)</li>
+                            <li class="feat" data-i18n="cl15_2">✨ Chọn nhiều file riêng lẻ (Select Files)</li>
+                            <li class="feat" data-i18n="cl15_3">✨ Vị trí số thứ tự: Prefix / Suffix</li>
+                            <li class="feat" data-i18n="cl15_4">✨ Theme Auto theo hệ thống OS</li>
+                            <li class="impr" data-i18n="cl15_6">🔧 Dropdown portal fix, flip upward thông minh</li>
+                            <li class="impr" data-i18n="cl15_7">🔧 Hiển thị kích thước ảnh gốc trong bảng preview</li>
+                            <li class="impr" data-i18n="cl15_8">🔧 Nút ✕ xóa từng file khỏi danh sách</li>
+                            <li class="fix" data-i18n="cl15_9">🐛 Fix file list sau khi convert định dạng</li>
+                        </ul>
+                    </details>
+                    <details class="changelog-version">
+                        <summary class="changelog-version-header">
+                            <span class="changelog-tag">v1.0.0</span>
+                            <span class="changelog-version-num">v1.0.0</span>
+                            <span class="changelog-date">2026-02-25</span>
+                        </summary>
+                        <ul class="changelog-list">
+                            <li class="feat" data-i18n="cl10_1">🎉 Ra mắt lần đầu</li>
+                            <li class="feat" data-i18n="cl10_2">✨ Rename nhanh: Lowercase, bỏ dấu, gạch ngang</li>
+                            <li class="feat" data-i18n="cl10_3">✨ Prefix / Suffix / Extension override</li>
+                            <li class="feat" data-i18n="cl10_4">✨ Đánh số tự động có padding</li>
+                            <li class="feat" data-i18n="cl10_5">✨ Phát hiện & giải quyết xung đột tên</li>
+                            <li class="feat" data-i18n="cl10_6">✨ Kéo thả sắp xếp file</li>
+                            <li class="feat" data-i18n="cl10_7">✨ Dark / Light theme</li>
+                        </ul>
+                    </details>
+
+                    <div style="text-align: center; margin-top: 10px; margin-bottom: 20px;">
+                        <a href="#"
+                            onclick="window.electronAPI.openExternal('https://github.com/nhanho93/fast-rename-gui/releases')"
+                            style="color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: 600;"
+                            data-i18n="clFullLink">Xem changelog đầy đủ trên GitHub ↗</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="toast" class="toast hidden"></div>
+        <div id="tooltip" class="tooltip hidden"></div>
+
+        <script src="Sortable.min.js"></script>
+        <script src="renderer.js"></script>
+</body>
+
+</html>

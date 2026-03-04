@@ -54,7 +54,7 @@ h2,
 h3,
 button,
 label {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Be Vietnam Pro', sans-serif;
 }
 
 .glass-container {
@@ -78,6 +78,14 @@ header {
     font-weight: 700;
     letter-spacing: -1.5px;
     margin: 0;
+}
+
+.brand h1 .app-logo {
+    height: 38px;
+    width: auto;
+    margin-right: 8px;
+    filter: drop-shadow(0 2px 8px rgba(255, 157, 0, 0.4));
+    vertical-align: middle;
 }
 
 .brand h1 span {
@@ -131,6 +139,236 @@ header {
     color: black;
     box-shadow: 0 6px 20px rgba(var(--accent-rgb), 0.5);
     transform: scale(1);
+}
+
+/* Language toggle button */
+.lang-btn {
+    height: 42px;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-left: 1px solid var(--border);
+    border-radius: 0 12px 12px 0;
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: var(--text-dim);
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    margin-left: 2px;
+}
+
+.lang-btn:hover {
+    color: var(--accent);
+    background: rgba(var(--accent-rgb), 0.08);
+    transform: scale(1.05);
+}
+
+/* Changelog button */
+.changelog-btn {
+    height: 42px;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(var(--accent-rgb), 0.08);
+    border: 1px solid rgba(var(--accent-rgb), 0.25);
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: var(--accent);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    margin-right: 4px;
+}
+
+.changelog-btn:hover {
+    background: rgba(var(--accent-rgb), 0.18);
+    box-shadow: 0 0 16px rgba(var(--accent-rgb), 0.25);
+    transform: translateY(-1px) scale(1.03);
+}
+
+/* Version badge — bottom-right corner */
+.version-badge {
+    position: fixed;
+    bottom: 12px;
+    right: 18px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--text-dim);
+    opacity: 0.45;
+    letter-spacing: 1px;
+    pointer-events: none;
+    z-index: 10;
+    font-family: 'Outfit', sans-serif;
+    transition: opacity 0.3s;
+}
+
+.version-badge:hover {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Changelog Modal specific */
+.changelog-modal {
+    width: 560px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding: 36px 40px 30px;
+    border-radius: 28px;
+    position: relative;
+}
+
+.changelog-close-btn {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    background: var(--border);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.changelog-close-btn:hover {
+    background: rgba(255, 80, 80, 0.2);
+    color: #ff5555;
+    transform: scale(1.1);
+}
+
+.changelog-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.changelog-icon {
+    font-size: 2.2rem;
+}
+
+.changelog-header h2 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+.changelog-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    margin-top: 2px;
+    font-weight: 500;
+}
+
+.changelog-body {
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-right: 4px;
+}
+
+details.changelog-version {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.015);
+}
+
+details.changelog-version summary {
+    cursor: pointer;
+    list-style: none;
+    /* Hide default arrow */
+    outline: none;
+}
+
+details.changelog-version summary::-webkit-details-marker {
+    display: none;
+}
+
+.changelog-version-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid var(--border);
+}
+
+.changelog-tag {
+    font-size: 0.6rem;
+    font-weight: 900;
+    padding: 3px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: var(--border);
+    color: var(--text-dim);
+}
+
+.changelog-tag.new {
+    background: linear-gradient(135deg, var(--accent), #ff8c00);
+    color: black;
+}
+
+.changelog-version-num {
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    font-family: 'Be Vietnam Pro', sans-serif;
+}
+
+.changelog-date {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    margin-left: auto;
+}
+
+.changelog-list {
+    list-style: none;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.changelog-list li {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    padding-left: 4px;
+    line-height: 1.5;
+}
+
+.changelog-list li.feat {
+    color: var(--text-primary);
+}
+
+.changelog-list li.impr {
+    color: var(--text-secondary);
+}
+
+.changelog-list li.fix {
+    color: #94a3b8;
 }
 
 /* Main Layout - Robust Flex Grid */
@@ -924,4 +1162,242 @@ body.light-theme .apply-btn {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--accent);
+}
+
+/* ============================================================
+   Favicon Generator Tab
+   ============================================================ */
+.favicon-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.favicon-generate-btn {
+    width: 100%;
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* Logo Picker Zone */
+.favicon-logo-zone {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px dashed var(--border);
+    border-radius: 14px;
+    padding: 14px;
+    margin-top: 12px;
+    cursor: pointer;
+    transition: border-color 0.3s, background 0.3s;
+}
+
+.favicon-logo-zone:hover {
+    border-color: var(--accent);
+    background: rgba(var(--accent-rgb), 0.04);
+}
+
+.favicon-logo-preview {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.favicon-logo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+.favicon-logo-placeholder {
+    font-size: 1.8rem;
+    opacity: 0.4;
+}
+
+.favicon-logo-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+}
+
+.favicon-logo-name {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+}
+
+/* Color Row */
+.favicon-color-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.favicon-color-picker {
+    width: 48px !important;
+    height: 44px;
+    padding: 3px !important;
+    border-radius: 10px !important;
+    cursor: pointer;
+    flex-shrink: 0;
+    border: 1px solid var(--border) !important;
+    background: var(--bg-input) !important;
+}
+
+/* Results Panel */
+.favicon-results {
+    margin-top: 0;
+}
+
+.favicon-results-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.favicon-results-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.favicon-results-list li.success {
+    color: #4ade80;
+}
+
+.favicon-results-list li.error {
+    color: #f87171;
+}
+
+.favicon-file-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.favicon-snippet {
+    margin-top: 12px;
+    padding: 12px 14px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    white-space: pre;
+    overflow-x: auto;
+    line-height: 1.7;
+}
+
+/* Favicon hint text */
+.favicon-hint {
+    margin-top: 12px;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+}
+
+.favicon-hint em {
+    color: var(--accent);
+    font-style: normal;
+    font-weight: 700;
+}
+
+/* Auto folder label below logo name */
+.favicon-auto-folder {
+    font-size: 0.7rem;
+    color: var(--accent);
+    font-weight: 600;
+    opacity: 0.85;
+}
+
+/* Results-dir badge */
+.favicon-results-dir {
+    font-size: 0.72rem;
+    color: var(--accent);
+    font-weight: 700;
+    background: rgba(var(--accent-rgb), 0.1);
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-left: 8px;
+}
+
+/* Favicon compact table */
+.favicon-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+.favicon-table th {
+    position: sticky;
+    top: 0;
+    background: var(--modal-bg);
+    padding: 6px 10px;
+    text-align: left;
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    border-bottom: 1px solid var(--border);
+}
+
+.favicon-table td {
+    padding: 7px 10px;
+    color: var(--text-secondary);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    vertical-align: middle;
+}
+
+.favicon-table tr:last-child td {
+    border-bottom: none;
+}
+
+.favicon-table tr:hover td {
+    background: var(--item-hover);
+}
+
+/* Header Changelog Button */
+.changelog-btn-top {
+    background: rgba(var(--accent-rgb), 0.15);
+    color: var(--accent);
+    border: 1px solid rgba(var(--accent-rgb), 0.3);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.changelog-btn-top:hover {
+    background: var(--accent);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(var(--accent-rgb), 0.4);
 }

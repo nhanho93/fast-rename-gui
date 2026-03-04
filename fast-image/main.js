@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
 const path = require('path');
 const fs = require('fs-extra');
 
@@ -8,6 +8,7 @@ function createWindow() {
         height: 800,
         minWidth: 700,
         minHeight: 500,
+        icon: path.join(__dirname, 'logo-app.png'),
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: false,
@@ -263,4 +264,151 @@ ipcMain.handle('rename-files', async (event, payload) => {
         }
     }
     return res;
+});
+
+// ============================================================
+// --- Favicon Generator ---
+// ============================================================
+
+/**
+ * Encode multiple PNG buffers into a single ICO file (PNG-in-ICO, Vista+).
+ * No external deps required.
+ */
+function createICOBuffer(entries) {
+    const HEADER = 6;
+    const DIR_ENTRY = 16;
+    const count = entries.length;
+    const dataBase = HEADER + count * DIR_ENTRY;
+    const totalSize = dataBase + entries.reduce((s, e) => s + e.data.length, 0);
+    const buf = Buffer.alloc(totalSize, 0);
+
+    // ICO file header
+    buf.writeUInt16LE(0, 0);       // reserved
+    buf.writeUInt16LE(1, 2);       // type: 1 = icon
+    buf.writeUInt16LE(count, 4);   // image count
+
+    let dirOff = HEADER;
+    let dataOff = dataBase;
+
+    for (const { data, size } of entries) {
+        const sz = size >= 256 ? 0 : size; // 0 = 256px in ICO spec
+        buf.writeUInt8(sz, dirOff);              // width
+        buf.writeUInt8(sz, dirOff + 1);          // height
+        buf.writeUInt8(0, dirOff + 2);           // color count
+        buf.writeUInt8(0, dirOff + 3);           // reserved
+        buf.writeUInt16LE(0, dirOff + 4);        // planes (0 = PNG embed)
+        buf.writeUInt16LE(0, dirOff + 6);        // bit count (0 = PNG embed)
+        buf.writeUInt32LE(data.length, dirOff + 8);  // data size
+        buf.writeUInt32LE(dataOff, dirOff + 12);     // data offset
+        dirOff += DIR_ENTRY;
+        data.copy(buf, dataOff);
+        dataOff += data.length;
+    }
+    return buf;
+}
+
+ipcMain.handle('select-logo-file', async (event) => {
+    try {
+        const win = BrowserWindow.fromWebContents(event.sender);
+        const { canceled, filePaths } = await dialog.showOpenDialog(win, {
+            title: 'Select Logo File',
+            filters: [
+                { name: 'Images', extensions: ['png', 'jpg', 'jpeg', 'webp', 'svg'] },
+                { name: 'All Files', extensions: ['*'] }
+            ],
+            properties: ['openFile']
+        });
+        if (canceled || !filePaths.length) return null;
+        return filePaths[0];
+    } catch (err) {
+        return null;
+    }
+});
+
+ipcMain.handle('select-output-folder', async (event) => {
+    try {
+        const win = BrowserWindow.fromWebContents(event.sender);
+        const { canceled, filePaths } = await dialog.showOpenDialog(win, {
+            title: 'Select Output Folder',
+            properties: ['openDirectory', 'createDirectory']
+        });
+        if (canceled || !filePaths.length) return null;
+        return filePaths[0];
+    } catch (err) {
+        return null;
+    }
+});
+
+ipcMain.handle('generate-favicon', async (event, { logoPath, outputDir, appName, themeColor }) => {
+    const results = [];
+    const errors = [];
+
+    try {
+        await fs.ensureDir(outputDir);
+
+        const PNG_SIZES = [
+            { name: 'favicon-16x16.png', size: 16 },
+            { name: 'favicon-32x32.png', size: 32 },
+            { name: 'favicon-48x48.png', size: 48 },
+            { name: 'apple-touch-icon.png', size: 180 },
+            { name: 'android-chrome-192x192.png', size: 192 },
+            { name: 'android-chrome-512x512.png', size: 512 },
+        ];
+        const ICO_SIZES = [16, 32, 48];
+
+        // 1. Generate all PNG sizes
+        for (const { name, size } of PNG_SIZES) {
+            try {
+                await sharp(logoPath)
+                    .resize(size, size, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+                    .png()
+                    .toFile(path.join(outputDir, name));
+                results.push(name);
+            } catch (e) {
+                errors.push({ file: name, error: e.message });
+            }
+        }
+
+        // 2. Generate favicon.ico (multi-size PNG-in-ICO)
+        try {
+            const icoEntries = [];
+            for (const size of ICO_SIZES) {
+                const data = await sharp(logoPath)
+                    .resize(size, size, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+                    .png()
+                    .toBuffer();
+                icoEntries.push({ data, size });
+            }
+            await fs.writeFile(path.join(outputDir, 'favicon.ico'), createICOBuffer(icoEntries));
+            results.push('favicon.ico');
+        } catch (e) {
+            errors.push({ file: 'favicon.ico', error: e.message });
+        }
+
+        // 3. Generate site.webmanifest
+        const manifest = {
+            name: appName || 'My App',
+            short_name: (appName || 'App').split(' ')[0],
+            icons: [
+                { src: '/android-chrome-192x192.png', sizes: '192x192', type: 'image/png' },
+                { src: '/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' }
+            ],
+            theme_color: themeColor || '#ffffff',
+            background_color: '#ffffff',
+            display: 'standalone'
+        };
+        await fs.writeJSON(path.join(outputDir, 'site.webmanifest'), manifest, { spaces: 2 });
+        results.push('site.webmanifest');
+
+        return { results, errors };
+    } catch (e) {
+        return { results, errors: [{ file: 'setup', error: e.message }] };
+    }
+});
+
+// External link opener
+ipcMain.handle('open-external', async (event, url) => {
+    if (url && typeof url === 'string' && (url.startsWith('http://') || url.startsWith('https://'))) {
+        await shell.openExternal(url);
+    }
 });
