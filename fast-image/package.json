@@ -23,7 +23,7 @@
     },
     "win": {
       "target": "portable",
-      "icon": "logo-app.png"
+      "icon": "logo-app-256.png"
     },
     "electronDownload": {
       "isVerifyChecksum": false

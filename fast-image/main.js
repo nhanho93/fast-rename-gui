@@ -16,7 +16,7 @@ function createWindow() {
         },
         autoHideMenuBar: true,
         backgroundColor: '#0a0a0b',
-        title: "Fast Rename Siêu Cấp VIP PRO"
+        title: "Fast Image Siêu Cấp VIP PRO"
     });
 
     win.loadFile('index.html');
