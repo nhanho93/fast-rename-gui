@@ -254,8 +254,10 @@ header {
 .changelog-header {
     display: flex;
     align-items: center;
+    justify-content: center;
+    text-align: center;
     gap: 10px;
-    margin-bottom: 0px;
+    margin-bottom: 4px;
     padding-bottom: 8px;
     border-bottom: 1px solid var(--border);
 }
@@ -269,7 +271,9 @@ header {
     font-weight: 800;
     color: var(--text-primary);
     margin: 0;
+    padding: 0;
     letter-spacing: -0.2px;
+    line-height: 1;
 }
 
 .changelog-subtitle {
@@ -1094,14 +1098,13 @@ body.light-theme .apply-btn {
 .modal h2 {
     font-size: 2rem;
     color: var(--accent);
-    margin-bottom: 15px;
+    margin-bottom: 0px;
 }
 
 .modal p {
     color: var(--text-secondary);
     line-height: 1.6;
     font-size: 1.1rem;
-    margin-bottom: 30px;
 }
 
 .modal-actions {
